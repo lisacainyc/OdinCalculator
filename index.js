@@ -1,3 +1,5 @@
+let clickedNumber = document.querySelector(".number");
+
 let a;
 let operator;
 let b;
