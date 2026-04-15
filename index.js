@@ -1,31 +1,68 @@
 let a;
 let operator;
 let b;
+let result;
+let tempNum = "";
 
 const clickedButton = document.querySelector(".buttons");
-const clickedOperator = document.querySelector(".operator");
+const clickedNumber = document.querySelectorAll(".number").forEach
+    (number => number.addEventListener('click', (event) => {
+    let selected = event.target.textContent;
+    buildNumber(selected);
+    }));
+const clickedOperator = document.querySelectorAll(".operator").forEach
+    (operatorButton => operatorButton.addEventListener('click', (event) => {
+    let selectedOperator = event.target.textContent;
+    if (!a){
+        a = tempNum;
+        tempNum = "";
+        operator = selectedOperator;
+    }else if (a && !b){
+        if (!tempNum){
+            operator = selectedOperator;
+        } else if (tempNum){
+            b = tempNum;
+            result = operate(a, b, operator);
+            updateDisplay(result);
+            a = result;
+            b = undefined;
+            tempNum = "";
+            operator = selectedOperator;}
+    }
+    }));
 const numberDisplay = document.querySelector(".display");
 const computeEquation = document.querySelector(".equals");
 const clearCalculator = document.querySelector(".AC");
+
 
 function updateDisplay(text){
     numberDisplay.textContent = "";
     numberDisplay.textContent = text;
 };
 
-clickedButton.addEventListener('click', (event) => {
-    let selected = event.target.textContent;
-    if (event.target.classList.contains('number') && !a){
-        a = +selected;
-        updateDisplay(selected);
-    } else if (event.target.classList.contains('number')) {
-        b = +selected;
-        updateDisplay(selected);
-    } else if (event.target.classList.contains('operator')){
-        operator = selected;
-        updateDisplay(selected);
-    }
+clickedButton.addEventListener('click', () => {
+    console.log ("a = " + a + ",b = " + b + ",operator = " + operator + ",result = " + result);
 });
+
+function clearVariables(){
+    a = undefined;
+    b = undefined;
+}
+
+function storeVariables(number){
+    if (!a){
+        a = +number;
+    }
+    else if (!b){
+        b = +number;
+    }
+};
+
+function buildNumber(input){
+    tempNum = tempNum + input;
+    updateDisplay(tempNum);
+    return tempNum;
+}
 
 function add(a, b){
     return a+b;
@@ -53,22 +90,28 @@ function divide(a, b){
 
 function operate(a, b, operator){
     if (operator === "+"){
-        return add(a,b);
+        return add(+a,+b);
     }
     else if (operator === "-"){
-        return subtract(a,b);
+        return subtract(+a,+b);
     }
     else if (operator === "x"){
-        return multiply(a,b);
+        return multiply(+a,+b);
     }
     else if (operator === "÷"){
-        return divide(a,b);
+        return divide(+a,+b);
     };
-    };
+    tempNum = "";
+};
 
 computeEquation.addEventListener('click', () => {
-    let result = operate(a, b, operator);
-    numberDisplay.textContent = result;
+    b = tempNum;
+    result = operate(a, b, operator);
+    updateDisplay(result);
+    a = result;
+    b = undefined;
+    operator = undefined;
+    tempNum = "";
 });
 
 clearCalculator.addEventListener('click', () => {
@@ -76,4 +119,6 @@ clearCalculator.addEventListener('click', () => {
     a = undefined;
     b = undefined;
     operator = undefined;
+    tempNum = "";
+    result = undefined;
 });
